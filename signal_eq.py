@@ -1,6 +1,8 @@
 from numpy import *
 from numpy.linalg import *
+from matplotlib.pyplot import *
 from scipy.special import gamma as gamma_func
+from mpl_toolkits.mplot3d import Axes3D
 
 # Typical values for scan constants
 # Panagiotaki et al., Neuroimage 2012
@@ -49,13 +51,12 @@ def S_cyl(radius):
     return exp(log_S_restr_plel + log_S_restr_perp)
 
 def Gamma(radius, k, sqiggly_theta):
-    return ( (radius**(k-1.0) * exp(-(radius/squiggly_theta))) /
-             (squiggly_theta**k * gamma_func(k)) )
+    return ( (radius**(k-1.0) * exp(-(radius/squiggly_theta))) / (squiggly_theta**k * gamma_func(k)) )
 
 S_in = 0.0
 Gamma_sum = 0.0
 k = 1.88
-squiggly_theta = 1.28e-4
+squiggly_theta = 1.28e-3
 
 S_out = S_unweighted * exp(-b * D_parallel)
 charmed_S = S_unweighted * S_cyl(1e-3)
