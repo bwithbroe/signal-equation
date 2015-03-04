@@ -15,9 +15,9 @@ class Model:
         # Axon direction
         self.axon_direction = array([0.0, 0.0, 1.0])
         
-        #
-        self.k = 1.88
-        self.squiggly_theta = 1.28e-4   # mm
+        # axon diameter distribution parameters
+        self.k = 1.77
+        self.squiggly_theta = 1.28e-3   # mm
         
         # proportion of unweighted signal from inter-axonal population
         self.f = .54

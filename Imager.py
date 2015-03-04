@@ -8,11 +8,11 @@ class Imager:
         # Typical values for scan constants
         # Panagiotaki et al., Neuroimage 2012
         self.little_delta = .003 # seconds
-        self.big_delta = .02     # seconds
-        self.tau = .02           # seconds
+        self.big_delta = .02     # seconds   (time from excitation to refocusing; usually 1/2 T_E)
+        self.tau = .02           # seconds   (1/2 T_E)
         self.gamma = 41.065e6    # Hz/T
-        #G = 0.00125         # T/mm
-        self.G = 0.0018
+        self.G = 0.00125         # T/mm
+        # self.G = 0.0018
         
         # Gradient direction in an axon-aligned coordinate frame
         # (axon goes along the Z direction)
@@ -22,6 +22,7 @@ class Imager:
         
         # b/"diffusion weighting factor".  Typical values are 250 -- 6000 s/mm^2.
         self.b = self.gamma**2.0 * self.G**2.0 * self.little_delta**2.0 * (self.big_delta - self.little_delta / 3.0)
+        print self.b
     
     '''
     def __init__(self, little_delta, big_delta, tau, gamma, G, g):
@@ -43,4 +44,4 @@ class Imager:
         
         # b/"diffusion weighting factor".  Typical values are 250 -- 6000 s/mm^2.
         self.b = gamma**2.0 * G**2.0 * little_delta**2.0 * (big_delta - little_delta / 3.0)
-        '''
+        '''     

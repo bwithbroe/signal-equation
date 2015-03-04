@@ -103,10 +103,10 @@ class ComputeVariables:
         return new_model.axon_direction
 
     
-    def plotSignal(self):
-        radii = arange(0, 0.0045, 0.00001)
+    def plotSignal(self, model):
+        radii = arange(0, 0.005, 0.00001)
         prob = self.Gamma(radii, model.k, model.squiggly_theta)
-        signal = self.S_cyl(radii)
+        signal = self.S_cyl(radii, model)
         
         figure()
         subplot(211)
@@ -116,6 +116,8 @@ class ComputeVariables:
         plot(radii, signal)
         show()
         
+    
+        
 if __name__ == '__main__':
     print ":)"
     imager = Imager()
@@ -124,19 +126,17 @@ if __name__ == '__main__':
     c = ComputeVariables(imager, model)
     num_vectors = 5
     vector_list = c.genVectors(num_vectors)
-    orientation_list = []
 
     axon_1_signal_list = []
     for vector in vector_list:
         c.imager.g = vector
         c.updateVariables(model)
         axon_1_signal_list.append(c.calcS(model))
-    orientation_list.append(axon_1_signal_list)
     
-    print
-    print c.compareSignals(axon_1_signal_list)
-    print model.axon_direction
+    #print
+    #print c.compareSignals(axon_1_signal_list)
+    #print model.axon_direction
     
-    # c.plotSignal()
+    c.plotSignal(model)
     
-    print orientation_list[0]
+    print axon_1_signal_list

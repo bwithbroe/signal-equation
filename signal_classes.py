@@ -11,21 +11,6 @@ from random import *
 imager = Imager()
 model = Model()
 
-def S_cyl(radius):
-    # Assaf et al., MRM 2004
-    log_S_restr_plel = -4.0 * pi**2.0 * q_parallel**2.0 * (imager.big_delta - (imager.little_delta/3.0)) * model.D_parallel
-    # BUG --- this should reduce to the previous equation as radius -> inf
-    log_S_restr_perp = (-((4.0 * pi**2.0 * radius**4.0 * q_perpendicular**2.0) / (model.D_perpendicular * imager.tau)) *
-                        (7.0/96.0) * (2.0-(99.0/112.0)*(radius**2.0/(model.D_perpendicular * imager.tau))))
-    # print "rest_plel exponent:", log_S_restr_plel
-    # print "rest_perp exponent:", log_S_restr_perp
-    print q_parallel
-    return exp(log_S_restr_plel + log_S_restr_perp)
-
-def Gamma(radius, k, squiggly_theta):
-    return ( (radius**(k-1.0) * exp(-(radius/squiggly_theta))) /
-             (squiggly_theta**k * gamma_func(k)) )
-
 # Algorithm from top answer to this question:
 # http://stackoverflow.com/questions/6283080/random-unit-vector-in-multi-dimensional-space
 def genVectors(num_vectors):
