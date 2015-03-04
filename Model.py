@@ -15,8 +15,12 @@ class Model:
         # Axon direction
         self.axon_direction = array([0.0, 0.0, 1.0])
         
+        #
         self.k = 1.88
-        self.squiggly_theta = 1.28e-4
+        self.squiggly_theta = 1.28e-4   # mm
+        
+        # proportion of unweighted signal from inter-axonal population
+        self.f = .54
     
     '''
     def __init__(self, S_unweighted, axon_direction, k = 1.88, squiggly_theta = 1.28e-4,
