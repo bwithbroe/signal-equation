@@ -66,7 +66,7 @@ class ComputeVariables:
     def S_in_instance(self, radius, model):
         return self.S_cyl(radius, model)*self.Gamma(radius, model.k, model.squiggly_theta)
         
-    def genVectors(self, num_vectors):
+    def genRandomVectors(self, num_vectors):
         vector_list = []
         vector_count = 0
         while vector_count < num_vectors:
@@ -84,6 +84,28 @@ class ComputeVariables:
         
         return vector_list
         
+    def genVectorsWithPhi(self, phi, num_vectors):
+        vector_list = []
+        z = cos(phi)
+        for i in range(num_vectors):
+            theta = 2*pi * i / (num_vectors - 1)
+            x = cos(theta) * sin(phi)
+            y = sin(theta) * sin(phi)
+            new_vector = array([x, y, z])
+            vector_list.append(new_vector)
+        return vector_list
+    
+    def genVectorsWithTheta(self, theta, num_vector):
+        vector_list = []
+        for i in range(num_vectors):
+            phi = (pi/2) * i / (num_vectors - 1)
+            z = cos(phi)
+            x = cos(theta) * sin(phi)
+            y = sin(theta) * sin(phi)
+            new_vector = array([x, y, z])
+            vector_list.append(new_vector)
+        return vector_list
+        
     def compareSignals(self, orig_axon_signal_list):
         found = False
         num_checked = 0
@@ -91,6 +113,7 @@ class ComputeVariables:
             found = True
             
             new_model = Model()
+            new_model.S_unweighted = uniform(100,500)
             new_model.axon_direction = self.genVectors(1)[0]
             
             new_axon_signal_list = []
@@ -100,14 +123,14 @@ class ComputeVariables:
                 new_axon_signal_list.append(self.calcS(new_model))
             for i in range(len(orig_axon_signal_list)):
                 # print "orig:", orig_axon_signal_list[i], " new:", new_axon_signal_list[i]
-                if abs(orig_axon_signal_list[i] - new_axon_signal_list[i]) > 5:
+                if abs(orig_axon_signal_list[i] - new_axon_signal_list[i]) > 10:
                     found = False
                     break
             num_checked += 1
             print "nope", num_checked
 
         print "ta-da!"
-        return new_model.axon_direction
+        return new_model
 
     
     def plotSignal(self, model):
@@ -134,20 +157,38 @@ if __name__ == '__main__':
     imager = Imager()
     model = Model()
     
+    print
+    print
+    print
+    
     c = ComputeVariables(imager, model)
-    num_vectors = 5
-    vector_list = c.genVectors(num_vectors)
-
+    num_vectors = 100
+    vector_list = c.genVectorsWithTheta(.2, num_vectors)
+    
+    
     axon_1_signal_list = []
     for vector in vector_list:
         c.imager.g = vector
         c.updateVariables(model)
         axon_1_signal_list.append(c.calcS(model))
-    
-    #print
-    #print c.compareSignals(axon_1_signal_list)
-    #print model.axon_direction
-    
-    c.plotSignal(model)
-    
     print axon_1_signal_list
+    
+    
+    y = array(axon_1_signal_list)
+    x = arange(0, pi/2, pi/2 / num_vectors)
+    
+    figure()
+    plot(x, y)
+    show()
+    
+        
+
+    
+    '''
+    print
+    new_model = c.compareSignals(axon_1_signal_list)
+    print model.axon_direction, "vs.", new_model.axon_direction
+    print model.S_unweighted, "vs.", new_model.S_unweighted
+    '''
+    
+    #c.plotSignal(model)
