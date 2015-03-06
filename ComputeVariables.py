@@ -40,7 +40,14 @@ class ComputeVariables:
         # print "rest_plel exponent:", log_S_restr_plel
         # print "rest_perp exponent:", log_S_restr_perp
         return exp(log_S_restr_plel + log_S_restr_perp)
-
+        
+    def S_restr_plel(self, model):
+        return exp( -4.0 * pi**2.0 * self.q_parallel**2.0 * (imager.big_delta - (imager.little_delta/3.0)) * model.D_parallel )
+        
+    def S_restr_perp(self, radius, model):
+        return exp((-((4.0 * pi**2.0 * radius**4.0 * self.q_perpendicular**2.0) / (model.D_perpendicular * imager.tau)) *
+                            (7.0/96.0) * (2.0-(99.0/112.0)*(radius**2.0/(model.D_perpendicular * imager.tau)))))
+                            
     def Gamma(self, radius, k, squiggly_theta):
         return ( (radius**(k-1.0) * exp(-(radius/squiggly_theta))) /
                  (squiggly_theta**k * gamma_func(k)) )
@@ -105,21 +112,25 @@ class ComputeVariables:
     
     def plotSignal(self, model):
         radii = arange(0, 0.005, 0.00001)
-        prob = self.Gamma(radii, model.k, model.squiggly_theta)
-        signal = self.S_cyl(radii, model)
+        signal_plel = empty(500)
+        signal_plel.fill(self.S_restr_plel(model))
+        signal_perp = self.S_restr_perp(radii, model)
+        
+        print
+        print signal_plel
+        print
+
         
         figure()
-        subplot(211)
-        plot(radii, prob)
         
-        subplot(212)
-        plot(radii, signal)
+        plot(radii, signal_plel)
+        
+        plot(radii, signal_perp)
         show()
         
     
         
 if __name__ == '__main__':
-    print ":)"
     imager = Imager()
     model = Model()
     
