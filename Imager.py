@@ -22,7 +22,6 @@ class Imager:
         
         # b/"diffusion weighting factor".  Typical values are 250 -- 6000 s/mm^2.
         self.b = self.gamma**2.0 * self.G**2.0 * self.little_delta**2.0 * (self.big_delta - self.little_delta / 3.0)
-        print self.b
     
     '''
     def __init__(self, little_delta, big_delta, tau, gamma, G, g):

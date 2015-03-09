@@ -48,6 +48,9 @@ class ComputeVariables:
         return exp((-((4.0 * pi**2.0 * radius**4.0 * self.q_perpendicular**2.0) / (model.D_perpendicular * imager.tau)) *
                             (7.0/96.0) * (2.0-(99.0/112.0)*(radius**2.0/(model.D_perpendicular * imager.tau)))))
                             
+    def ST(self, model):
+        return exp(-imager.b * model.D_parallel)
+                            
     def Gamma(self, radius, k, squiggly_theta):
         return ( (radius**(k-1.0) * exp(-(radius/squiggly_theta))) /
                  (squiggly_theta**k * gamma_func(k)) )
@@ -138,17 +141,15 @@ class ComputeVariables:
         signal_plel = empty(500)
         signal_plel.fill(self.S_restr_plel(model))
         signal_perp = self.S_restr_perp(radii, model)
-        
-        print
-        print signal_plel
-        print
-
+        signal_ST = empty(500)
+        signal_ST.fill(self.ST(model))
         
         figure()
         
         plot(radii, signal_plel)
-        
         plot(radii, signal_perp)
+        plot(radii, signal_ST)
+        
         show()
         
     
@@ -157,32 +158,29 @@ if __name__ == '__main__':
     imager = Imager()
     model = Model()
     
-    print
-    print
-    print
-    
     c = ComputeVariables(imager, model)
-    num_vectors = 100
-    vector_list = c.genVectorsWithTheta(.2, num_vectors)
-    
+    num_vectors = 10
+    vector_list = c.genVectorsWithTheta(0, num_vectors)
     
     axon_1_signal_list = []
     for vector in vector_list:
         c.imager.g = vector
         c.updateVariables(model)
         axon_1_signal_list.append(c.calcS(model))
-    print axon_1_signal_list
+        print vector
+        c.plotSignal(model)
+    #print axon_1_signal_list
     
     
+    '''
     y = array(axon_1_signal_list)
     x = arange(0, pi/2, pi/2 / num_vectors)
     
     figure()
     plot(x, y)
     show()
+    '''
     
-        
-
     
     '''
     print
@@ -190,5 +188,3 @@ if __name__ == '__main__':
     print model.axon_direction, "vs.", new_model.axon_direction
     print model.S_unweighted, "vs.", new_model.S_unweighted
     '''
-    
-    #c.plotSignal(model)
